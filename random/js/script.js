@@ -1,4 +1,4 @@
-/*** 
+﻿/*** 
  * `quotes` array 
 ***/
 const quotes = [
@@ -82,7 +82,7 @@ function printQuote() {
   document.querySelector('.quote-box').innerHTML = message;
   document.body.style.backgroundColor = backgroundColor;
 }
-setInterval(printQuote, 3000);
+setInterval(printQuote, 20000);
 
 /***
  * click event listener for the print quote button
