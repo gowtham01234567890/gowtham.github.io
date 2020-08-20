@@ -82,19 +82,23 @@ paypal.hidden = true;
 const bitcoin = document.querySelector('#bitcoin');
 bitcoin.hidden = true;
 
+paymentMode[1].selected = true;
 
 paymentMode.addEventListener('change', (e) => {
 	let selected = e.target.value;
 	
 	if(selected === 'credit card') {
+		paymentMode[1].selected = true;
 		credit_card.hidden = false;
 		paypal.hidden = true;
 		bitcoin.hidden = true;
 	} else if(selected === 'paypal') {
+		paymentMode[2].selected = true;
 		credit_card.hidden = true;
 		paypal.hidden = false;
 		bitcoin.hidden = true;
 	} else if(selected === 'bitcoin') {
+		paymentMode[3].selected = true;
 		credit_card.hidden = true;
 		paypal.hidden = true;
 		bitcoin.hidden = false;
