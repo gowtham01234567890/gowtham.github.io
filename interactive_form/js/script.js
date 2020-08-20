@@ -76,7 +76,7 @@ selectMethod.hidden = true;
 const paymentMode = document.querySelector('#payment');
 
 const credit_card = document.querySelector('#credit-card');
-credit_card.hidden = true;
+// credit_card.hidden = true;
 const paypal = document.querySelector('#paypal');
 paypal.hidden = true;
 const bitcoin = document.querySelector('#bitcoin');
