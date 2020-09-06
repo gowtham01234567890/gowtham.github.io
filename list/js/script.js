@@ -1,138 +1,139 @@
-/* filtering data with search */
-const header = document.getElementsByClassName('header')[0];
+/*** Search ***/
+const ul = document.querySelector('.student-list');
+const linkList = document.querySelector('.link-list');
+
+const header = document.querySelector('.header');
 
 const label = document.createElement('label');
 label.setAttribute('for', 'search');
-label.className = "student-search";
-
-const search = document.createElement('input');
-search.type = 'text';
-search.placeholder = "Search by name...";
-
-const submit = document.createElement('button');
-submit.type = "submit";
-
-const img = document.createElement('img');
-img.src = "img/icn-search.svg";
-img.alt = "Search icon";
-
-
-label.appendChild(search);
-label.appendChild(submit);
-submit.appendChild(img);
-
+label.className = 'student-search';
+label.innerHTML = `
+		<input id="search" placeholder="Search by name...">
+		<button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+`;
 header.appendChild(label);
 
-function srch(searchInput, names) {
-   for(let i = 0; i < names.length; i++) {
-     names[i].style.display = "none";
-     if((searchInput.value.length) >= 0 && (names[i].textContent.toLowerCase())
-     	.includes(searchInput.value.toLowerCase())) {
-       names[i].style.display = "block";
-     } 
-   }
-   
- }
+let search1 = document.querySelector('#search');
+let button1 = document.querySelector('button');
+let results = [];
 
-submit.addEventListener('click', (event) => {
-   event.preventDefault();
-   srch(search, student_item);
- });
- 
-search.addEventListener('keyup', () => {
-	srch(search, student_item);
+function srch(searchInput) {
+	if(searchInput.length !== '') {
+		results = [];
+		for(let i = 0; i < data.length; i++) {
+			let tempName = (data[i].name.title + " " + data[i].name.first + " " + data[i].name.last);
+			if( (tempName.toLowerCase()).includes(searchInput.toLowerCase()) ) {
+				results.push(data[i]);
+			}
+		}
+
+		if(results.length === 0) {
+			ul.innerHTML= '';
+			linkList.innerHTML = '';
+
+			let h1 = document.createElement('h1');
+			h1.innerHTML = "No Data Found";
+			ul.appendChild(h1);
+
+			let resetSearch = document.createElement('button');
+			resetSearch.innerHTML = "<h1 style='font-size:30px;'>Reset Search</h1>";
+			ul.appendChild(resetSearch);
+			resetSearch.addEventListener('click', () => {
+				showPage(data, 1);
+				addPagination(data);
+			 });
+			
+		} else {
+			showPage(results, 1);
+			addPagination(results);
+		}
+	}
+}
+
+search1.addEventListener('keyup', e => {
+	srch(search1.value);
 });
 
-let student_item = [];
-/* Data Pagination */
+button1.addEventListener('submit', e => {
+	e.preventDefault();
+	srch(search);
+});
 
+/**** Main ****/
 const itemsPerPage = 9;
 
-/* This creates shows only 9 items perPage */
 function showPage(list, page) {
 	const startIndex = (page * itemsPerPage) - itemsPerPage;
 	const endIndex = (page * itemsPerPage);
 
-	const student_list = document.getElementsByClassName('student-list')[0];
-	student_list.innerHTML = '';
+	// const ul = document.querySelector('.student-list');
+	ul.innerHTML = '';
 
 	for(let i = 0; i < list.length; i++) {
-		if(i >= startIndex && i < endIndex) {
+		if( i >= startIndex && i < endIndex) {
 			let li = document.createElement('li');
-			li.className = 'student-item cf';
+			li.className = "student-item cf";
+			li.innerHTML = `
+				<div class="student-details">
+				<img class="avatar" src=${list[i].picture.large} alt="Profile Picture">
+				<h3>${list[i].name.title} ${list[i].name.first} ${list[i].name.last}</h3>
+				<span class="email">${list[i].email}</span>
+				</div>
+				<div class="joined-details">
+				<span class="date">Joined ${list[i].registered.date}</span>
+				</div>
+			`;
+		
+			ul.insertAdjacentElement('beforeend', li);
 
-			let div1 = document.createElement('div');
-			div1.className = 'student-details';
-
-			let img = document.createElement('img');
-			img.className = 'avatar';
-			img.src = `${list[i].picture.large}`;
-
-			let h3 = document.createElement('h3');
-			h3.textContent = `${list[i].name.title} ${list[i].name.first} ${list[i].name.last}`;
-
-			let span1 = document.createElement('span');
-			span1.className = 'email';
-			span1.textContent = `${list[i].email}`;
-
-			let div2 = document.createElement('div');
-			div2.className = 'joined-details';
-
-			let span2 = document.createElement('span');
-			span2.className = 'date';
-			span2.textContent = `Joined ${list[i].registered.date}`;
-
-			
-			li.appendChild(div1);
-			div1.appendChild(img);
-			div1.appendChild(h3);
-			div1.appendChild(span1);
-			li.appendChild(div2);
-			div2.appendChild(span2);
-			student_list.appendChild(li);
-			// student_list.insertAdjacentHTML('beforeend', li.outerHTML);
-			student_item.push(li);
 		}
-	} 
+	}
 }
 
 showPage(data, 1);
 
-/* This function creates pages dynamically */
+/*
+Create the `addPagination` function
+This function will create and insert/append the elements needed for the pagination buttons
+*/
+
 function addPagination(list) {
-	let pages = Math.ceil(list.length/itemsPerPage);
+	const numPages = Math.ceil(list.length/itemsPerPage);
 
-	let link_list = document.getElementsByClassName('link-list')[0];
-	link_list.innerHTML = '';
+	// const linkList = document.querySelector('.link-list');
+	linkList.innerHTML = '';
 
-	for(let i = 0; i < pages; i++) {
+	for(let i = 1; i <= numPages; i++) {
 		let li = document.createElement('li');
 		let button = document.createElement('button');
-		button.textContent = i + 1;
+		button.type = 'button';
+		button.textContent = `${i}`;
 
-		link_list.appendChild(li);
 		li.appendChild(button);
+		linkList.appendChild(li);
+
+		// let button1 = document.querySelectorAll('button')[0];
+		// button1.className = 'active';
 
 		if(Number(button.textContent) === 1) {
 			button.className = 'active';
 		}
 
-		link_list.addEventListener('click', e => {
+		linkList.addEventListener('click', e => {
 			if(e.target.tagName === 'BUTTON') {
-			let buttons = document.querySelectorAll('button');
-			for(let i = 0; i < buttons.length; i++) {
-				buttons[i].classList.remove('active');
-			}
-			
+				let button = document.querySelector('.active');
+				button.className = '';
+
 				let clicked = e.target;
-				let num = clicked.textContent;
-				clicked.classList.add('active');
-				showPage(list, Number(num));
+				let text = clicked.textContent;
+				clicked.className = 'active';
+
+				showPage(list, text);
 			}
 		});
+
 	}
 }
 
-
 // Call functions
-addPagination(data)
+addPagination(data);
